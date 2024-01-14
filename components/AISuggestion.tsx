@@ -29,7 +29,7 @@ function AISuggestion({ term }: { term: string }) {
         <div className="animate-pulse rounded-full bg-gradient-to-t from-white h-10 w-10 border-2 flex-shrink-0 border-whiet"></div>
         <div>
           <p className="text-sm text-gray-400">AI Assitant Suggests: </p>
-          <p className="italic text-xl">"{data.message}"</p>
+          <p className="italic text-xl">&quot;{data.message}&quot;</p>
         </div>
       </>
     );
