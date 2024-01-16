@@ -1,3 +1,4 @@
+import AIChatbot from "@/components/AIChatbot";
 import CarouselBannerWrapper from "@/components/CarouselBannerWrapper";
 import MoviesCarousel from "@/components/MoviesCarousel";
 import {
@@ -12,6 +13,7 @@ export default async function Home() {
   const popularMovies = await getPopularMovies();
   return (
     <main className="">
+      <AIChatbot />
       <CarouselBannerWrapper />
       <div className="flex flex-col space-y-2 xl:-mt-48">
         <MoviesCarousel movies={upcomingMovies} title="Upcoming" />

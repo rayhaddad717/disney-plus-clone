@@ -15,7 +15,7 @@ export async function getMoviesSuggestions(term: string) {
         },
         {
           role: "user",
-          content: `I like ${term}`,
+          content: `${term}`,
         },
       ],
     }),
