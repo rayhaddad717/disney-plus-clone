@@ -20,6 +20,9 @@ module.exports = {
       flex: {
         full: "0 0 100%",
       },
+      transitionProperty: {
+        height: "height",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
