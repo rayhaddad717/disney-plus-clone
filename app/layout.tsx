@@ -9,7 +9,7 @@ import { GlobalStateContextWrapper } from "@/components/global-state-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Disney+ Clone",
+  title: "Disney+ AI Clone",
   description: "Hobby Project",
 };
 
