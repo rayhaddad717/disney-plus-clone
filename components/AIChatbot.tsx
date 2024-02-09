@@ -285,7 +285,7 @@ const LinkPopover = React.memo(function ({
       };
       fetchMovies();
     } catch (error) {}
-  }, []);
+  }, [link, itemType]);
   const handleMouseEnter = () => {
     // Clear any existing timeout to prevent the popover from closing if mouse re-enters
     if (timeoutRef.current) {
@@ -388,5 +388,5 @@ const LinkPopover = React.memo(function ({
     </Popover>
   );
 });
-
+LinkPopover.displayName = "LinkPopover";
 export default AIChatbot;
