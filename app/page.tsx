@@ -13,7 +13,6 @@ export default async function Home() {
   const popularMovies = await getPopularMovies();
   return (
     <main className="">
-      <AIChatbot />
       <CarouselBannerWrapper />
       <div className="flex flex-col space-y-2 xl:-mt-48">
         <MoviesCarousel movies={upcomingMovies} title="Upcoming" />

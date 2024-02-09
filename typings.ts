@@ -13,6 +13,9 @@ export type Movie = {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  //tv show
+  name?: string;
+  first_air_date?: string;
 };
 
 export type SearchResults = {
@@ -29,3 +32,8 @@ export type Genre = {
 export type Genres = {
   genres: Genre[];
 };
+export interface IChat {
+  role: "user" | "system";
+  content: string;
+}
+export type SearchType = "movie" | "tv-show";

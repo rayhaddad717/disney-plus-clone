@@ -13,7 +13,7 @@ async function fetchFromTMDB(url: URL, cacheTime?: number) {
       Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_KEY}`,
     },
     next: {
-      revalidate: cacheTime || 60 * 60 * 24, // 24 hours
+      revalidate: cacheTime || 60 * 60 * 24 * 7, // 24 hours * 7 = 7days
     },
   };
   const response = await fetch(url.toString(), options);
@@ -45,6 +45,12 @@ export async function getDiscoverMovies(id?: string, keywords?: string) {
 }
 export async function getSearchedMovies(term: string) {
   const url = new URL("https://api.themoviedb.org/3/search/movie");
+  url.searchParams.set("query", term);
+  const data = await fetchFromTMDB(url);
+  return data.results;
+}
+export async function getSearchedTVShow(term: string) {
+  const url = new URL("https://api.themoviedb.org/3/search/tv");
   url.searchParams.set("query", term);
   const data = await fetchFromTMDB(url);
   return data.results;

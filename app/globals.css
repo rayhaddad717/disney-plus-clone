@@ -74,3 +74,31 @@
     @apply bg-background text-foreground;
   }
 }
+@layer utilities {
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+}
+/* Styles the scrollbar track */
+::-webkit-scrollbar-track {
+  background: #1A1C29;
+  border-radius: 8px;
+  width:5px;
+  /* Light grey background for the track */
+}
+
+/* Styles the scrollbar thumb (the part that you drag) */
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 8px;
+  width:5px;
+  /* Dark grey scrollbar thumb */
+}
+
+::-webkit-scrollbar{
+  background-color: #020817;
+  width:5px;
+}
