@@ -25,6 +25,11 @@ import { Skeleton } from "./ui/skeleton";
 const formSchema = z.object({
   input: z.string().min(2).max(100),
 });
+const suggestedUserMessages = [
+  "I am looking for a comedic movie",
+  "I am in for a scare!",
+  "Just Browsing",
+];
 function AIChatbot() {
   const globalState = useContext(GlobalStateContext);
   const dispatch = useContext(GlobalStateDispatchContext);
@@ -112,8 +117,10 @@ function AIChatbot() {
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col justify-end items-end space-y-2">
       <div
-        className={`bg-[#FEFEFE]  w-[75vw]  md:w-[400px] max-w-lg  text-black dark:text-white rounded-2xl  flex flex-col items-center transition-height duration-300 ease-in-out ${
-          globalState.isChatbotVisible ? "h-[70vh]" : "h-0"
+        className={`bg-[#1A1C29] absolute bottom-0   w-[75vw]  md:w-[400px] max-w-lg  text-black dark:text-white rounded-2xl  flex flex-col items-center transition-all duration-500 ease-in-out h-[80vh]  ${
+          globalState.isChatbotVisible
+            ? "opacity-100"
+            : " opacity-0 translate-y-full"
         } overflow-hidden`}
         style={{
           WebkitBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
@@ -160,14 +167,11 @@ function AIChatbot() {
             {userMessages.map((message, index) => (
               <li
                 key={`message-${index}`}
-                className={`w-fit border-[1px] max-w-[60%] rounded-md p-2 px-4 mx-2   text-black ${
+                className={`w-fit border-[1px] max-w-[60%] p-2 px-4 mx-2   text-black rounded-2xl ${
                   message.role === "user"
                     ? " bg-[#B18C19] ml-auto "
                     : " bg-gray-300 "
                 } `}
-                style={{
-                  borderRadius: "clamp(10px, 5%, 10px)",
-                }}
               >
                 <p className="text-sm font-medium">{message.content}</p>
                 <div className="flex gap-1 flex-wrap">
@@ -183,10 +187,24 @@ function AIChatbot() {
               </li>
             ))}
 
-            {state === "sending" && (
+            {state === "sending" ? (
               <li className="w-fit max-w-[60%] border-[1px] rounded-lg p-2 px-4 bg-gray-300 text-black mx-2 text-sm font-medium">
                 <p>Thinking....</p>
               </li>
+            ) : (
+              userMessages.length === 1 && (
+                <li className="ml-auto mx-2 max-w-[80%] flex flex-wrap gap-2 justify-end">
+                  {suggestedUserMessages.map((suggestion, index) => (
+                    <p
+                      onClick={() => onSubmit({ input: suggestion })}
+                      key={`suggestedUserMessage-${index}`}
+                      className="  rounded-2xl  border-[1px] border-white cursor-pointer hover:border-[#B18C19] hover:text-[#B18C19] transition-all duration-200 ease-in-out  w-fit  p-2 px-4  text-sm font-normal"
+                    >
+                      {suggestion}
+                    </p>
+                  ))}
+                </li>
+              )
             )}
           </ul>
           {/* end messages */}
@@ -233,29 +251,30 @@ function AIChatbot() {
         )}
         {/* end form */}
       </div>
-
-      <div
-        style={{
-          WebkitBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
-          MozBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
-          boxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
-        }}
-        className="h-[64px] w-[64px] bg-zinc-600 rounded-full cursor-pointer text-center flex justify-center items-center"
-        onClick={() => dispatch({ type: "TOGGLE_CHATBOT" })}
-      >
-        {/* <p className="text-4xl font-bold"> */}
-        <Image
-          src={"/images/chatbot.png"}
-          width={32}
-          height={32}
-          alt="Ask AI"
+      {!globalState.isChatbotVisible && (
+        <div
           style={{
-            filter:
-              "invert(100%) sepia(100%) saturate(1%) hue-rotate(287deg) brightness(104%) contrast(101%)",
+            WebkitBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
+            MozBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
+            boxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
           }}
-        />
-        {/* </p> */}
-      </div>
+          className="h-[64px] w-[64px] bg-zinc-600 rounded-full cursor-pointer text-center flex justify-center items-center"
+          onClick={() => dispatch({ type: "TOGGLE_CHATBOT" })}
+        >
+          {/* <p className="text-4xl font-bold"> */}
+          <img
+            src={"/images/chatbot.png"}
+            width={32}
+            height={32}
+            alt="Ask AI"
+            style={{
+              filter:
+                "invert(100%) sepia(100%) saturate(1%) hue-rotate(287deg) brightness(104%) contrast(101%)",
+            }}
+          />
+          {/* </p> */}
+        </div>
+      )}
     </div>
   );
 }
