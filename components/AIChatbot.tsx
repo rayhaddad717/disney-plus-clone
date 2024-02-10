@@ -25,11 +25,6 @@ import { Skeleton } from "./ui/skeleton";
 const formSchema = z.object({
   input: z.string().min(2).max(100),
 });
-const suggestedUserMessages = [
-  "I am looking for a comedic movie",
-  "I am in for a scare!",
-  "Just Browsing",
-];
 function AIChatbot() {
   const globalState = useContext(GlobalStateContext);
   const dispatch = useContext(GlobalStateDispatchContext);
@@ -42,6 +37,11 @@ function AIChatbot() {
       input: "",
     },
   });
+  const [suggestedUserMessages, setSuggestedUserMessages] = useState([
+    "I am looking for a comedic movie",
+    "I am in for a scare!",
+    "Just Browsing",
+  ]);
   const askAI = useCallback(async (previousChats: IChat[], newChat: IChat) => {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -58,6 +58,12 @@ function AIChatbot() {
       askAI([], { content: "Hello", role: "user" } as IChat).then(
         (newMessage) => {
           setMessages([{ content: newMessage, role: "system" } as IChat]);
+          const parsedMessage = JSON.parse(newMessage);
+          if (parsedMessage?.suggestedUserMessages?.length) {
+            setSuggestedUserMessages(parsedMessage.suggestedUserMessages);
+          } else {
+            setSuggestedUserMessages([]);
+          }
         }
       );
     }, 250);
@@ -96,6 +102,14 @@ function AIChatbot() {
     const newChat = { content: values.input, role: "user" } as IChat;
     setMessages([...messages, newChat]);
     askAI(messages, newChat as IChat).then((newMessage) => {
+      try {
+        const parsedMessage = JSON.parse(newMessage);
+        if (parsedMessage?.suggestedUserMessages?.length) {
+          setSuggestedUserMessages(parsedMessage.suggestedUserMessages);
+        } else {
+          setSuggestedUserMessages([]);
+        }
+      } catch (error) {}
       const newMessages = [
         ...messages,
         newChat,
@@ -192,7 +206,7 @@ function AIChatbot() {
                 <p>Thinking....</p>
               </li>
             ) : (
-              userMessages.length === 1 && (
+              suggestedUserMessages.length && (
                 <li className="ml-auto mx-2 max-w-[80%] flex flex-wrap gap-2 justify-end">
                   {suggestedUserMessages.map((suggestion, index) => (
                     <p
