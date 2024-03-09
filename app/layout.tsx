@@ -21,23 +21,32 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const configuration = {
+    ALLOW_AI: process.env.ALLOW_AI === "true",
+  };
   return (
     <html lang="en">
       <body className="bg-white dark:bg-[#1A1C29] flex flex-col overflow-y-auto h-[100vh]">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
           <GlobalStateContextWrapper>
             <Header />
-            <AIChatbot />
+            {configuration.ALLOW_AI && <AIChatbot />}
             {children}
           </GlobalStateContextWrapper>
         </ThemeProvider>
-        <footer className="my-2 mb-4">
-          <p className="text-center">MovieGenie</p>
+        <footer className="my-2 pb-4 flex flex-col items-center w-full mt-20 gap-6 ">
+          <a
+            href="https://www.flaticon.com/free-icons/clean"
+            title="clean icons"
+          >
+            Clean icons created by Good Ware - Flaticon
+          </a>
+          <p className="text-center">MovieGenie 2024</p>
         </footer>
       </body>
     </html>

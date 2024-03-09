@@ -252,22 +252,19 @@ function AIChatbot() {
               <li className="w-fit max-w-[60%] border-[1px] rounded-lg p-2 px-4 bg-gray-300 text-black mx-2 text-sm font-medium">
                 <p>Thinking....</p>
               </li>
-            ) : (
-              messages.length &&
-              suggestedUserMessages.length && (
-                <li className="ml-auto mx-2 max-w-[80%] flex flex-wrap gap-2 justify-end">
-                  {suggestedUserMessages.map((suggestion, index) => (
-                    <p
-                      onClick={() => onSubmit({ input: suggestion })}
-                      key={`suggestedUserMessage-${index}`}
-                      className="  rounded-2xl  border-[1px] border-white cursor-pointer hover:border-[#B18C19] hover:text-[#B18C19] transition-all duration-200 ease-in-out  w-fit  p-2 px-4  text-sm font-normal"
-                    >
-                      {suggestion}
-                    </p>
-                  ))}
-                </li>
-              )
-            )}
+            ) : messages.length && suggestedUserMessages.length ? (
+              <li className="ml-auto mx-2 max-w-[80%] flex flex-wrap gap-2 justify-end">
+                {suggestedUserMessages.map((suggestion, index) => (
+                  <p
+                    onClick={() => onSubmit({ input: suggestion })}
+                    key={`suggestedUserMessage-${index}`}
+                    className="  rounded-2xl  border-[1px] border-white cursor-pointer hover:border-[#B18C19] hover:text-[#B18C19] transition-all duration-200 ease-in-out  w-fit  p-2 px-4  text-sm font-normal"
+                  >
+                    {suggestion}
+                  </p>
+                ))}
+              </li>
+            ) : null}
           </ul>
           {/* end messages */}
         </div>
@@ -320,19 +317,16 @@ function AIChatbot() {
             MozBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
             boxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
           }}
-          className="h-[64px] w-[64px] bg-zinc-600 rounded-full cursor-pointer text-center flex justify-center items-center"
+          className="h-[64px] w-[64px] dark:bg-[#1A1C29] rounded-full cursor-pointer text-center flex justify-center items-center"
           onClick={() => dispatch({ type: "TOGGLE_CHATBOT" })}
         >
           {/* <p className="text-4xl font-bold"> */}
           <img
-            src={"/images/chatbot.png"}
+            className="ai-chatbot-image duration-200 ease-in-out transition-all"
+            src={"/images/clean.png"}
             width={32}
             height={32}
             alt="Ask AI"
-            style={{
-              filter:
-                "invert(100%) sepia(100%) saturate(1%) hue-rotate(287deg) brightness(104%) contrast(101%)",
-            }}
           />
           {/* </p> */}
         </div>

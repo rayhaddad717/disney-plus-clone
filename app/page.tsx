@@ -8,9 +8,12 @@ import {
 } from "@/lib/getMovies";
 
 export default async function Home() {
-  const upcomingMovies = await getUpcomingMovies();
-  const topRatedMovies = await getTopRatedMovies();
-  const popularMovies = await getPopularMovies();
+  const [upcomingMovies, topRatedMovies, popularMovies] = await Promise.all([
+    getUpcomingMovies(),
+    getTopRatedMovies(),
+    getPopularMovies(),
+  ]);
+
   return (
     <main className="">
       <CarouselBannerWrapper />
