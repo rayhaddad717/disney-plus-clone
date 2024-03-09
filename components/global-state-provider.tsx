@@ -1,20 +1,30 @@
 "use client";
 
+import { MovieDetail } from "@/typings";
 import * as React from "react";
 
 import { createContext, useState } from "react";
 // Define types
 type State = {
   isChatbotVisible: boolean;
+  movieDetail: MovieDetail | null;
 };
 
 type Action = {
-  type: "TOGGLE_CHATBOT" | "HIDE_CHATBOT";
+  type:
+    | "TOGGLE_CHATBOT"
+    | "HIDE_CHATBOT"
+    | "SHOW_CHATBOT"
+    | "UPDATE_MOVIE_CONTEXT";
+  payload?: {
+    movieDetail?: MovieDetail | null;
+  };
 };
 
 // Initial state
 const initialState: State = {
   isChatbotVisible: true,
+  movieDetail: null,
 };
 
 // Reducer function
@@ -30,6 +40,17 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         isChatbotVisible: false,
       };
+    case "SHOW_CHATBOT":
+      return {
+        ...state,
+        isChatbotVisible: true,
+      };
+    case "UPDATE_MOVIE_CONTEXT": {
+      return {
+        ...state,
+        movieDetail: action.payload?.movieDetail || null,
+      };
+    }
     default:
       return state;
   }

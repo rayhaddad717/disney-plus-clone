@@ -22,6 +22,7 @@ import {
   GlobalStateDispatchContext,
 } from "./global-state-provider";
 import { Skeleton } from "./ui/skeleton";
+import debounce from "lodash.debounce";
 const formSchema = z.object({
   input: z.string().min(2).max(100),
 });
@@ -55,8 +56,26 @@ function AIChatbot() {
   }, []);
   useEffect(() => {
     setTimeout(() => {
-      askAI([], { content: "Hello", role: "user" } as IChat).then(
-        (newMessage) => {
+      initChats();
+    }, 250);
+  }, [setMessages, askAI]);
+
+  function initChats() {
+    return new Promise<void>((resolve, reject) => {
+      const previousChats = globalState.movieDetail?.id
+        ? [
+            {
+              content: `The user is now in the details page of ${
+                globalState.movieDetail.title
+              }, offer to help them with any question regarding this movie/tv show. For your reference here are some details that you can use to answer the user: ${JSON.stringify(
+                globalState.movieDetail
+              )}`,
+              role: "system" as "system",
+            },
+          ]
+        : [];
+      askAI(previousChats, { content: "Hello", role: "user" } as IChat)
+        .then((newMessage) => {
           setMessages([{ content: newMessage, role: "system" } as IChat]);
           const parsedMessage = JSON.parse(newMessage);
           if (parsedMessage?.suggestedUserMessages?.length) {
@@ -64,10 +83,33 @@ function AIChatbot() {
           } else {
             setSuggestedUserMessages([]);
           }
-        }
-      );
-    }, 250);
-  }, [setMessages, askAI]);
+          resolve();
+        })
+        .catch(reject);
+    });
+  }
+  const [lastMovieContext, setLastMovieContext] = useState<number | null>(null);
+  useEffect(() => {
+    if (!globalState.movieDetail?.id) return;
+    if (lastMovieContext === globalState.movieDetail?.id) return;
+    setLastMovieContext(globalState?.movieDetail?.id || null);
+
+    // Call debouncedSearch function with the latest query value
+    // const cancel = debounce(() => {
+    // return;
+    initChats()
+      .then(() => {
+        if (!globalState.isChatbotVisible) dispatch({ type: "SHOW_CHATBOT" });
+      })
+      .catch(console.error);
+
+    // Cleanup function to cancel debounced function on unmount
+    return () => {
+      // cancel();
+    };
+    // Trigger useEffect when query or debouncedSearch changes
+  }, [globalState.movieDetail]);
+
   const userMessages = messages.map((message) => {
     const userMessage = {
       ...message,
@@ -127,7 +169,6 @@ function AIChatbot() {
       setState("waiting");
     });
   };
-
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col justify-end items-end space-y-2">
       <div
@@ -173,7 +214,13 @@ function AIChatbot() {
             </div>
           </div>
           {/* end header */}
+          {globalState.movieDetail && (
+            <div className="text-center font-bold m-2">
+              Context: {globalState.movieDetail?.title}
+            </div>
+          )}
           {/* start messages */}
+
           <ul
             ref={ulRef}
             className="max-h-[100%] overflow-y-auto overflow-x-hidden flex flex-col w-full flex-1 gap-4 shrink-1 basis-0 py-1 bg-[#1A1C29]"
@@ -206,6 +253,7 @@ function AIChatbot() {
                 <p>Thinking....</p>
               </li>
             ) : (
+              messages.length &&
               suggestedUserMessages.length && (
                 <li className="ml-auto mx-2 max-w-[80%] flex flex-wrap gap-2 justify-end">
                   {suggestedUserMessages.map((suggestion, index) => (
@@ -351,13 +399,21 @@ const LinkPopover = React.memo(function ({
     setOpen(false);
     dispatch({ type: "HIDE_CHATBOT" });
   };
+  const movieLink = movie?.id
+    ? `/movies/${
+        movie.title
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, "") // Replace non-alphanumeric characters except for spaces and dashes
+          .replace(/\s+/g, "-") // Replace spaces with dashes
+      }--${movie.id}`
+    : `/search/${link}`;
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <Link href={`/search/${link}`}>
+        <Link href={movieLink}>
           <p
             onClick={handleClick}
             className="hover:underline text-sm font-bold"
@@ -398,7 +454,7 @@ const LinkPopover = React.memo(function ({
             <p className="mt-4 text-md">
               Rating: {movie.vote_average?.toFixed(2)} / 10
             </p>
-            <Link href={`/search/${link}`}>
+            <Link href={movieLink}>
               <p
                 className="text-sm text-gray-700 font-bold hover:underline ml-auto cursor-pointer"
                 onClick={handleClick}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -9,10 +9,13 @@ import { GlobalStateContextWrapper } from "@/components/global-state-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Disney+ AI Clone",
+  title: "MovieGenie",
   description: "Hobby Project",
 };
-
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 export default function RootLayout({
   children,
 }: {
@@ -20,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white dark:bg-[#1A1C29]">
+      <body className="bg-white dark:bg-[#1A1C29] flex flex-col overflow-y-auto h-[100vh]">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -34,7 +37,7 @@ export default function RootLayout({
           </GlobalStateContextWrapper>
         </ThemeProvider>
         <footer className="my-2 mb-4">
-          <p className="text-center">Disney+ AI Clone</p>
+          <p className="text-center">MovieGenie</p>
         </footer>
       </body>
     </html>
