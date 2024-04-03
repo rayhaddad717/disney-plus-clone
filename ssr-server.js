@@ -8,6 +8,7 @@ app
   .prepare()
   .then(() => {
     const server = express();
+    server.use(express.static(".next"));
     server.get("*", (req, res) => {
       return handle(req, res);
     });
