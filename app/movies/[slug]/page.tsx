@@ -193,7 +193,7 @@ async function MovieDetailsPage({ params: { slug }, seachParams }: Props) {
           </div>
         </div>
         <div
-          className="flex flex-col gap-4 mt-[6rem] "
+          className="flex flex-col gap-4 mt-[6rem] overflow-hidden max-w-full"
           style={{ marginTop: 96 }}
         >
           <h1 className="text-3xl font-bold w-full">

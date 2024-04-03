@@ -18,7 +18,9 @@ function Header() {
           height={100}
           className="cursor-pointer invert-0 dark:invert"
         /> */}
-        <h1 className="w-129 h-100 text-4xl italic font-bold">MovieGenie</h1>
+        <h1 className="w-129 h-100 text-sm md:text-4xl italic font-bold">
+          MovieGenie
+        </h1>
       </Link>
       <div className="flex space-x-2">
         <GenreDropdown />
