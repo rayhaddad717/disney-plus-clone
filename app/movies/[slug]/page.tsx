@@ -122,7 +122,7 @@ async function MovieDetailsPage({ params: { slug }, seachParams }: Props) {
             {movie.tagline && (
               <blockquote>
                 <p className="text-4xl font-semibold italic text-gray-900 dark:text-white">
-                  "{movie.tagline}"
+                  &quot;{movie.tagline}&quot;
                 </p>
               </blockquote>
             )}
