@@ -6,14 +6,15 @@ import Link from "next/link";
 
 type Props = {
   movie: Movie;
+  source: "Genre" | "Search" | "Home" | "CarouselBanner";
 };
-function MovieCard({ movie }: Props) {
+function MovieCard({ movie, source }: Props) {
   const movieLink = `/movies/${
     movie.title
       .toLowerCase()
       .replace(/[^\w\s-]/g, "") // Replace non-alphanumeric characters except for spaces and dashes
       .replace(/\s+/g, "-") // Replace spaces with dashes
-  }--${movie.id}`;
+  }--${movie.id}?source=${source}`;
 
   return (
     <Link

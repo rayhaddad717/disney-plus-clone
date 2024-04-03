@@ -22,7 +22,7 @@ import {
   GlobalStateDispatchContext,
 } from "./global-state-provider";
 import { Skeleton } from "./ui/skeleton";
-import debounce from "lodash.debounce";
+import { WrappedLogEvent, analytics } from "@/lib/firebase/firebase";
 const formSchema = z.object({
   input: z.string().min(2).max(100),
 });
@@ -43,17 +43,25 @@ function AIChatbot() {
     "I am in for a scare!",
     "Just Browsing",
   ]);
-  const askAI = useCallback(async (previousChats: IChat[], newChat: IChat) => {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      body: JSON.stringify({
-        previousChats,
-        newChat,
-      }),
-    });
-    const json = await res.json();
-    return json.message;
-  }, []);
+  const askAI = useCallback(
+    async (
+      previousChats: IChat[],
+      newChat: IChat,
+      movieContext: string | null
+    ) => {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        body: JSON.stringify({
+          previousChats,
+          newChat,
+          movieContext,
+        }),
+      });
+      const json = await res.json();
+      return json.message;
+    },
+    []
+  );
   useEffect(() => {
     setTimeout(() => {
       initChats();
@@ -67,14 +75,18 @@ function AIChatbot() {
             {
               content: `The user is now in the details page of ${
                 globalState.movieDetail.title
-              }, offer to help them with any question regarding this movie/tv show. For your reference here are some details that you can use to answer the user: ${JSON.stringify(
+              }, offer to help them with any question regarding this movie/tv show. For your reference here are some details that you can use to answer the user as a JSON string: ${JSON.stringify(
                 globalState.movieDetail
-              )}`,
+              )}. You should use this information as your source if the user asks a question about this movie.`,
               role: "system" as "system",
             },
           ]
         : [];
-      askAI(previousChats, { content: "Hello", role: "user" } as IChat)
+      askAI(
+        previousChats,
+        { content: "Hello", role: "user" } as IChat,
+        globalState.movieDetail?.id ? globalState.movieDetail.title : null
+      )
         .then((newMessage) => {
           setMessages([{ content: newMessage, role: "system" } as IChat]);
           const parsedMessage = JSON.parse(newMessage);
@@ -138,12 +150,25 @@ function AIChatbot() {
     }
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmitWrapper = (values: z.infer<typeof formSchema>) => {
+    onSubmit(values, "manual-input");
+  };
+  const onSubmit = (
+    values: z.infer<typeof formSchema>,
+    source?: "ai-suggestion" | "manual-input"
+  ) => {
+    WrappedLogEvent("chat", {
+      chatSource: source,
+    });
     setState("sending");
     form.reset();
     const newChat = { content: values.input, role: "user" } as IChat;
     setMessages([...messages, newChat]);
-    askAI(messages, newChat as IChat).then((newMessage) => {
+    askAI(
+      messages,
+      newChat as IChat,
+      globalState.movieDetail?.id ? globalState.movieDetail.title : null
+    ).then((newMessage) => {
       try {
         const parsedMessage = JSON.parse(newMessage);
         if (parsedMessage?.suggestedUserMessages?.length) {
@@ -169,6 +194,7 @@ function AIChatbot() {
       setState("waiting");
     });
   };
+
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col justify-end items-end space-y-2">
       <div
@@ -203,7 +229,14 @@ function AIChatbot() {
             </div>
             <div
               className="cursor-pointer"
-              onClick={() => dispatch({ type: "TOGGLE_CHATBOT" })}
+              onClick={() => {
+                WrappedLogEvent("chatbot_toggle", {
+                  state: globalState.isChatbotVisible
+                    ? "hide-chatbot"
+                    : "show-chatbot",
+                });
+                dispatch({ type: "TOGGLE_CHATBOT" });
+              }}
             >
               <Image
                 src={"/icons/chevron_down.svg"}
@@ -256,7 +289,9 @@ function AIChatbot() {
               <li className="ml-auto mx-2 max-w-[80%] flex flex-wrap gap-2 justify-end">
                 {suggestedUserMessages.map((suggestion, index) => (
                   <p
-                    onClick={() => onSubmit({ input: suggestion })}
+                    onClick={() =>
+                      onSubmit({ input: suggestion }, "ai-suggestion")
+                    }
                     key={`suggestedUserMessage-${index}`}
                     className="  rounded-2xl  border-[1px] border-white cursor-pointer hover:border-[#B18C19] hover:text-[#B18C19] transition-all duration-200 ease-in-out  w-fit  p-2 px-4  text-sm font-normal"
                   >
@@ -272,7 +307,7 @@ function AIChatbot() {
         {globalState.isChatbotVisible && (
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={form.handleSubmit(onSubmitWrapper)}
               className="flex justify-between w-full bg-[#1A1C29] px-2 py-2 gap-2"
             >
               <div className="flex-1">
@@ -318,7 +353,14 @@ function AIChatbot() {
             boxShadow: "0px 6px 24px 0px rgba(0,0,0,0.75)",
           }}
           className="h-[64px] w-[64px] dark:bg-[#1A1C29] rounded-full cursor-pointer text-center flex justify-center items-center"
-          onClick={() => dispatch({ type: "TOGGLE_CHATBOT" })}
+          onClick={() => {
+            WrappedLogEvent("chatbot_toggle", {
+              state: globalState.isChatbotVisible
+                ? "hide-chatbot"
+                : "show-chatbot",
+            });
+            dispatch({ type: "TOGGLE_CHATBOT" });
+          }}
         >
           {/* <p className="text-4xl font-bold"> */}
           <img
@@ -399,15 +441,20 @@ const LinkPopover = React.memo(function ({
           .toLowerCase()
           .replace(/[^\w\s-]/g, "") // Replace non-alphanumeric characters except for spaces and dashes
           .replace(/\s+/g, "-") // Replace spaces with dashes
-      }--${movie.id}`
-    : `/search/${link}`;
+      }--${movie.id}?source=chat`
+    : `/search/${link}?source=chat`;
+  const sendAnalytics = () => {
+    WrappedLogEvent("clicked_on_movie_suggestion", {
+      movie_name: movie?.title,
+    });
+  };
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <Link href={movieLink}>
+        <Link href={movieLink} onClick={sendAnalytics}>
           <p
             onClick={handleClick}
             className="hover:underline text-sm font-bold"
@@ -448,7 +495,7 @@ const LinkPopover = React.memo(function ({
             <p className="mt-4 text-md">
               Rating: {movie.vote_average?.toFixed(2)} / 10
             </p>
-            <Link href={movieLink}>
+            <Link href={movieLink} onClick={sendAnalytics}>
               <p
                 className="text-sm text-gray-700 font-bold hover:underline ml-auto cursor-pointer"
                 onClick={handleClick}

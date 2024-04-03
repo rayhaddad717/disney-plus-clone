@@ -58,7 +58,7 @@ function CarouselsBanner({ movies }: Props) {
                     .toLowerCase()
                     .replace(/[^\w\s-]/g, "") // Replace non-alphanumeric characters except for spaces and dashes
                     .replace(/\s+/g, "-") // Replace spaces with dashes
-                }--${movie.id}`}
+                }--${movie.id}?source=CarouselBanner`}
                 className="flex-full min-w-0 relative"
                 key={movie.id}
               >

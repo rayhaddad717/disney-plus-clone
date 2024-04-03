@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import { Input } from "./ui/input";
+import { WrappedLogEvent } from "@/lib/firebase/firebase";
 
 const formSchema = z.object({
   input: z.string().min(2).max(50),
@@ -19,6 +20,7 @@ function SearchInput() {
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
+    WrappedLogEvent("search", { search_term: values.input });
     router.push(`/search/${values.input}`);
     form.reset();
   }

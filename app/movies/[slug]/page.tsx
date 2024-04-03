@@ -12,15 +12,38 @@ import { notFound } from "next/navigation";
 import React from "react";
 import { MovieCredits } from "@/components/Movies/MovieCredits";
 import MovieContextUpdater from "@/components/Movies/MovieContextUpdater";
+import { Metadata, ResolvingMetadata } from "next/types";
 
 interface Props {
   params: {
     slug: string;
   };
+  seachParams?: {
+    source?: "chat";
+  };
 }
+export async function generateMetadata(
+  { params: { slug } }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  try {
+    // read route params
+    const splitSlug = slug.split("--");
 
-async function MovieDetailsPage({ params: { slug } }: Props) {
+    const movieID = parseInt(splitSlug[splitSlug.length - 1]);
+    const movie = await getMovieDetailsById(movieID);
+    return {
+      title: `${movie.title} | MovieGenie`,
+    };
+  } catch (error) {
+    return {
+      title: "Movie Genie",
+    };
+  }
+}
+async function MovieDetailsPage({ params: { slug }, seachParams }: Props) {
   if (!slug) notFound();
+
   const splitSlug = slug.split("--");
 
   const movieID = parseInt(splitSlug[splitSlug.length - 1]);
