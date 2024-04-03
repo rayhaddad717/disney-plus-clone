@@ -18,7 +18,7 @@ interface Props {
   params: {
     slug: string;
   };
-  seachParams?: {
+  searchParams?: {
     source?: "chat";
   };
 }
@@ -41,7 +41,7 @@ export async function generateMetadata(
     };
   }
 }
-async function MovieDetailsPage({ params: { slug }, seachParams }: Props) {
+async function MovieDetailsPage({ params: { slug }, searchParams }: Props) {
   if (!slug) notFound();
 
   const splitSlug = slug.split("--");
