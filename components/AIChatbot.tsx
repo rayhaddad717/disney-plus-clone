@@ -30,7 +30,7 @@ function AIChatbot() {
   const globalState = useContext(GlobalStateContext);
   const dispatch = useContext(GlobalStateDispatchContext);
   const [messages, setMessages] = React.useState<IChat[]>([]);
-  const [state, setState] = useState<"waiting" | "sending">("waiting");
+  const [state, setState] = useState<"waiting" | "sending">("sending");
   const ulRef = React.useRef<HTMLUListElement>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -95,6 +95,7 @@ function AIChatbot() {
           } else {
             setSuggestedUserMessages([]);
           }
+          setState("waiting");
           resolve();
         })
         .catch(reject);
