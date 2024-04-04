@@ -33,7 +33,7 @@ function SearchInput() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Search..." {...field} />
+                <Input placeholder="Search movie..." {...field} />
               </FormControl>
             </FormItem>
           )}

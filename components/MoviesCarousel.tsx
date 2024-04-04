@@ -16,7 +16,7 @@ function MoviesCarousel({ movies, isVertical, title, source }: Props) {
       <div
         className={cn(
           "flex space-x-4 overflow-scroll scrollbar-hide px-5 lg:px-10 py-5",
-          isVertical && "flex-col space-x-0 space-y-12"
+          isVertical && "flex-col space-x-0 space-y-12 gap-20 md:gap-8"
         )}
       >
         {isVertical

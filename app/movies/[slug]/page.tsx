@@ -193,8 +193,8 @@ async function MovieDetailsPage({ params: { slug }, searchParams }: Props) {
           </div>
         </div>
         <div
-          className="flex flex-col gap-4 mt-[6rem] overflow-hidden max-w-full"
-          style={{ marginTop: 96 }}
+          className="flex flex-col gap-4 mt-[6rem] 0 ml-8"
+          style={{ marginTop: 96, maxWidth: "calc(100% - 70px)" }}
         >
           <h1 className="text-3xl font-bold w-full">
             Trailers, Videos, and more
