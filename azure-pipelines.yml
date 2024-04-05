@@ -20,7 +20,7 @@ steps:
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
-    commands: 'cd ~/code/disney-plus-clone/;npm i;'
+    commands: 'cd ~/code/disney-plus-clone/; touch today.txt; npm i;'
     readyTimeout: '20000'
   displayName: 'Installing Dependencies'
 - task: SSH@0
