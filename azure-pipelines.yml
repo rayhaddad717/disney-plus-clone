@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'Digital Ocean SSH Connection'
+    runOptions: 'commands'
+    commands: 'cd code/disney-plus-clone/; && npm run build;'
+    readyTimeout: '20000'
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'Digital Ocean SSH Connection'
+    runOptions: 'commands'
+    commands: 'pm2 restart MovieGenie'
+    readyTimeout: '20000'
