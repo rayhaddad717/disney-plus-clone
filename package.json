@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "echo Starting Build && next build > next_build_log 2> next_build_errors.log && echo Done",
     "start": "next start",
     "lint": "next lint",
     "serve": "node ssr-server.js"
