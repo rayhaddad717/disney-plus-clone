@@ -14,16 +14,16 @@ steps:
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
-    commands: 'cd ~/code/disney-plus-clone/ && touch today.txt && git pull;'
+    commands: 'cd ~/code/disney-plus-clone/ && touch today.txt && git pull && echo "Git pull completed successfully"'
     readyTimeout: '20000'
   displayName: 'Git pull'
+
 - task: SSH@0
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
     commands: 'cd ~/code/disney-plus-clone/;  npm i;'
     readyTimeout: '20000'
-  displayName: 'Installing Dependencies'
 - task: SSH@0
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
