@@ -46,7 +46,7 @@ export default function RootLayout({
           >
             Clean icons created by Good Ware - Flaticon
           </a>
-          <p className="text-center">Movie_Genie &copy;2024</p>
+          <p className="text-center">Movie Genie &copy;2024 | Ray Haddad</p>
         </footer>
       </body>
     </html>
