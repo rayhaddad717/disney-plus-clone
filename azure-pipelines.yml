@@ -14,7 +14,7 @@ steps:
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
-    commands: cd ~/code/disney-plus-clone/ && touch today.txt && git pull > git_status.txt && echo "Git pull completed successfully";
+    commands: cd ~/code/disney-plus-clone/ && touch today.txt && git pull 2> git_error.log && echo "Git pull completed successfully";
     readyTimeout: '20000'
   displayName: 'Git pull'
 - task: SSH@0
