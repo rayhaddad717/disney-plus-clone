@@ -35,7 +35,7 @@ steps:
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
-    commands: cd ~/code/disney-plus-clone/ && (npm run build > npm_run_build.log  2> npm_run_build_errors.log; echo "Build Ended") && echo "Built files successfully";
+    commands: "cd ~/code/disney-plus-clone/ && (npm run build > npm_run_build.log  2> npm_run_build_errors.log; echo 'Build Ended') && echo 'Built files successfully'"
 
     readyTimeout: '20000'
   displayName: 'Building Files'
