@@ -10,6 +10,12 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: ado-discord-webhook@2
+  inputs:
+    webhookId: '1225855640786702497/'
+    webhookKey: 'CIur9sprqOrTHBhRZAypEdFBI5R2vjSss4Fi1Mj2Bzhix3E6fO-SqXVO2PaIVWBAbj2y'
+    content: 'Deployment Started'
+  displayName: 'Discord Webhook Started'
 - task: SSH@0
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
@@ -29,7 +35,7 @@ steps:
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
-    commands: cd ~/code/disney-plus-clone/ && npm run build > /dev/null 2> npm_run_build_errors.log && echo "Built files successfully";
+    commands: cd ~/code/disney-plus-clone/ && npm run build > /dev/null 2>&1 && echo "Built files successfully";
     readyTimeout: '20000'
   displayName: 'Building Files'
 - task: SSH@0
@@ -39,3 +45,9 @@ steps:
     commands: 'pm2 restart MovieGenie'
     readyTimeout: '20000'
   displayName: 'Restart pm2'
+- task: ado-discord-webhook@2
+  inputs:
+    webhookId: '1225855640786702497/'
+    webhookKey: 'CIur9sprqOrTHBhRZAypEdFBI5R2vjSss4Fi1Mj2Bzhix3E6fO-SqXVO2PaIVWBAbj2y'
+    content: 'Deployment Ended'
+  displayName: 'Discord Webhook Ended'
