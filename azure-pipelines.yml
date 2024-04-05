@@ -19,6 +19,13 @@ steps:
 - task: SSH@0
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
+    runOptions: 'inline'
+    inline: "cd ~/code/disney-plus-clone/ && source ~/.nvm/nvm.sh && nvm use 18.17.0 2> nvm_error.log && echo 'Build Started' && npm run build > npm_run_build.log  2> npm_run_build_errors.log; echo 'Build Ended' && echo 'Built files successfully';"
+    readyTimeout: '20000'
+  displayName: 'Building Files'
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
     commands: 'cd ~/scripts/ && ./build.sh'
     readyTimeout: '20000'
@@ -36,13 +43,6 @@ steps:
     commands: cd ~/code/disney-plus-clone/ &&  npm i 2> npm_install_errors.log && echo "Installed dependencies successfully";
     readyTimeout: '20000'
   displayName: 'Installing Dependencies'
-- task: SSH@0
-  inputs:
-    sshEndpoint: 'Digital Ocean SSH Connection'
-    runOptions: 'inline'
-    inline: "cd ~/code/disney-plus-clone/ && nvm use 18.17.0 2> nvm_error.log && echo 'Build Started' && npm run build > npm_run_build.log  2> npm_run_build_errors.log; echo 'Build Ended' && echo 'Built files successfully';"
-    readyTimeout: '20000'
-  displayName: 'Building Files'
 
 - task: SSH@0
   inputs:
