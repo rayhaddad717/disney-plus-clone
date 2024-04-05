@@ -14,13 +14,14 @@ steps:
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
-    commands: 'cd ~/code/disney-plus-clone/;git pull;'
+    commands: 'cd ~/code/disney-plus-clone/;touch today.txt;git pull;'
     readyTimeout: '20000'
+  displayName: 'Git pull'
 - task: SSH@0
   inputs:
     sshEndpoint: 'Digital Ocean SSH Connection'
     runOptions: 'commands'
-    commands: 'cd ~/code/disney-plus-clone/; touch today.txt; npm i;'
+    commands: 'cd ~/code/disney-plus-clone/;  npm i;'
     readyTimeout: '20000'
   displayName: 'Installing Dependencies'
 - task: SSH@0
@@ -36,3 +37,4 @@ steps:
     runOptions: 'commands'
     commands: 'pm2 restart MovieGenie'
     readyTimeout: '20000'
+  displayName: 'Restart pm2'
