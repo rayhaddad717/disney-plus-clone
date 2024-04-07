@@ -35,7 +35,7 @@ export function MovieVideosCarousel({ movieVideos }: Props) {
             <CarouselItem key={index}>
               <div className="p-1">
                 <Card>
-                  <CardContent className="flex  items-center justify-center p-2 aspect-video">
+                  <CardContent className="bg-none flex p-0 items-center justify-center overflow-hidden rounded-lg aspect-video">
                     <iframe
                       className="w-full h-full"
                       src={`https://www.youtube.com/embed/${_.key}`}
