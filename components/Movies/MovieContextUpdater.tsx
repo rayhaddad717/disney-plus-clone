@@ -7,7 +7,7 @@ import {
 import { MovieDetail } from "@/typings";
 
 type Props = {
-  movieDetail: MovieDetail;
+  movieDetail: MovieDetail | null;
 };
 export default function MovieContextUpdater({ movieDetail }: Props) {
   const globalState = useContext(GlobalStateContext);

@@ -68,6 +68,7 @@ function CarouselsBanner({ movies }: Props) {
                   alt={movie.title}
                   width={1920}
                   height={1080}
+                  loading="lazy"
                 />
                 <div
                   className="hidden md:inline absolute mt-0 top-0 pt-40 xl:pt-52

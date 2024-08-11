@@ -1,3 +1,4 @@
+import MovieContextUpdater from "@/components/Movies/MovieContextUpdater";
 import MoviesCarousel from "@/components/MoviesCarousel";
 import { Button } from "@/components/ui/button";
 import { getDiscoverMovies } from "@/lib/getMovies";
@@ -39,6 +40,7 @@ async function GenrePage({ params: { id }, searchParams: { genre } }: Props) {
         isVertical
         source="Genre"
       />
+      <MovieContextUpdater movieDetail={null} />
     </div>
   );
 }

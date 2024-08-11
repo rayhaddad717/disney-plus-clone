@@ -244,6 +244,7 @@ function AIChatbot() {
                 alt={"close ai assistant"}
                 width={20}
                 height={20}
+                loading="lazy"
               />
             </div>
           </div>
@@ -339,6 +340,7 @@ function AIChatbot() {
                   alt={"submit message"}
                   width={20}
                   height={20}
+                  loading="lazy"
                 />
               </button>
             </form>
@@ -439,9 +441,9 @@ const LinkPopover = React.memo(function ({
   const movieLink = movie?.id
     ? `/movies/${
         movie.title
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, "") // Replace non-alphanumeric characters except for spaces and dashes
-          .replace(/\s+/g, "-") // Replace spaces with dashes
+          ?.toLowerCase()
+          ?.replace(/[^\w\s-]/g, "") // Replace non-alphanumeric characters except for spaces and dashes
+          ?.replace(/\s+/g, "-") // Replace spaces with dashes
       }--${movie.id}?source=chat`
     : `/search/${link}?source=chat`;
   const sendAnalytics = () => {
@@ -485,6 +487,7 @@ const LinkPopover = React.memo(function ({
                 key={movie.id}
                 src={getImagePath(movie.backdrop_path || movie.poster_path)}
                 onLoad={() => setImageLoaded(true)}
+                loading="lazy"
               />
 
               <p className=" line-clamp-3">

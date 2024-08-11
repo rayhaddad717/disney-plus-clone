@@ -24,7 +24,8 @@ export async function getChatResponse(previousChats: IChat[], newChat: IChat) {
         Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo-0125",
+        // model: "gpt-3.5-turbo-0125",
+        model: "gpt-4o-mini",
         // model: "gpt-4",
         messages,
         response_format: { type: "json_object" },

@@ -31,6 +31,7 @@ function MovieCard({ movie, source }: Props) {
         height={1080}
         key={movie.id}
         src={getImagePath(movie.backdrop_path || movie.poster_path)}
+        loading="lazy"
       />
     </Link>
   );
